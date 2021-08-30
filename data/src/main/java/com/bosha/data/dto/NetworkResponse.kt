@@ -6,21 +6,15 @@ import kotlinx.parcelize.Parcelize
 
 
 @Parcelize
-data class Response(
+data class WeatherResponse(
 	@field:SerializedName("current")
 	val current: Current,
-	@field:SerializedName("timezone")
-	val timezone: String,
-	@field:SerializedName("timezone_offset")
-	val timezoneOffset: Int,
 	@field:SerializedName("daily")
 	val daily: List<DailyItem>,
 	@field:SerializedName("lon")
 	val lon: Double,
 	@field:SerializedName("hourly")
 	val hourly: List<HourlyItem>,
-	@field:SerializedName("minutely")
-	val minutely: List<MinutelyItem>,
 	@field:SerializedName("lat")
 	val lat: Double
 ) : Parcelable

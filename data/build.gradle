@@ -6,6 +6,11 @@ plugins {
 
 }
 
+// Reading the apikey from file
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdk 30
 
@@ -17,6 +22,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        // Put the apikey and base url in BuildConfig
+        buildConfigField 'String', 'THE_WEATHER_APIKEY', keystoreProperties['THE_WEATHER_APIKEY']
+        buildConfigField 'String', 'BASE_URL', "\"https://api.openweathermap.org/data/2.5/\""
     }
 
     buildTypes {

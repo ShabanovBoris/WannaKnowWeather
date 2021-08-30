@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WannaKnowWeather</string>
+    <string name="celseus">°C</string>
+    <string name="_7_day_forecast">7-day forecast</string>
 </resources>
