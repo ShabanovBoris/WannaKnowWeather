@@ -123,13 +123,6 @@ data class Current(
 	val windSpeed: Double
 ) : Parcelable
 
-@Parcelize
-data class MinutelyItem(
-	@field:SerializedName("dt")
-	val dt: Int,
-	@field:SerializedName("precipitation")
-	val precipitation: Int
-) : Parcelable
 
 @Parcelize
 data class WeatherItem(

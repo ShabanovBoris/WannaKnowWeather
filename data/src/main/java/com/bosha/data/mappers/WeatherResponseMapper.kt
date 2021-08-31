@@ -1,4 +1,6 @@
 package com.bosha.data.mappers
 
-class WeatherResponseMapper {
+import javax.inject.Inject
+
+class WeatherResponseMapper @Inject constructor() {
 }
