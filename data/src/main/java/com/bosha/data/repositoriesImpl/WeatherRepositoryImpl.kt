@@ -4,7 +4,7 @@ import com.bosha.data.api.impl.WeatherDataSource
 import com.bosha.domain.common.ErrorResult
 import com.bosha.domain.common.Result
 import com.bosha.domain.common.SuccessResult
-import com.bosha.domain.common.WeatherLocation
+import com.bosha.domain.common.WeatherCoordinatesLocation
 import com.bosha.domain.entities.CurrentWeather
 import com.bosha.domain.repositories.WeatherRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,8 +17,8 @@ import javax.inject.Inject
 class WeatherRepositoryImpl @Inject constructor(
     private val dataSource: WeatherDataSource
 ) : WeatherRepository {
-    override fun getCurrentWeather(weatherLocation: WeatherLocation): Flow<Result<CurrentWeather>> {
-        return dataSource.getCurrentWeatherByLocation(weatherLocation)
+    override fun getCurrentWeather(weatherCoordinatesLocation: WeatherCoordinatesLocation): Flow<Result<CurrentWeather>> {
+        return dataSource.getCurrentWeatherByLocation(weatherCoordinatesLocation)
             .map { SuccessResult(it) as Result<CurrentWeather> }
             .catch { cause ->
                 if ((cause is retrofit2.HttpException) ||

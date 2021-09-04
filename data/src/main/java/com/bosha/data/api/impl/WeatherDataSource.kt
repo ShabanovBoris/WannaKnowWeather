@@ -2,7 +2,7 @@ package com.bosha.data.api.impl
 
 import com.bosha.data.api.WeatherApi
 import com.bosha.data.mappers.WeatherResponseMapper
-import com.bosha.domain.common.WeatherLocation
+import com.bosha.domain.common.WeatherCoordinatesLocation
 import com.bosha.domain.entities.CurrentWeather
 import com.bosha.domain.entities.Weather
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,10 +18,10 @@ class WeatherDataSource @Inject constructor(
     private val mapper: WeatherResponseMapper,//todo
     private val dispatcher: CoroutineDispatcher? = null
 ) {
-    fun getCurrentWeatherByLocation(weatherLocation: WeatherLocation): Flow<CurrentWeather> =
+    fun getCurrentWeatherByLocation(weatherCoordinatesLocation: WeatherCoordinatesLocation): Flow<CurrentWeather> =
         flow {
             emit(
-                api.currentWeatherByLocation(weatherLocation.lat, weatherLocation.lon)
+                api.currentWeatherByLocation(weatherCoordinatesLocation.lat, weatherCoordinatesLocation.lon)
                     .let {
                         CurrentWeather(
                             sunrise = it.current.sunrise,

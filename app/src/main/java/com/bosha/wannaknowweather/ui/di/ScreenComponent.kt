@@ -1,6 +1,6 @@
 package com.bosha.wannaknowweather.ui.di
 
-import com.bosha.wannaknowweather.MainActivity
+import com.bosha.wannaknowweather.ui.MainScreenActivity
 import com.bosha.wannaknowweather.di.DataModule
 import com.bosha.wannaknowweather.di.UseCaseModule
 import com.bosha.wannaknowweather.di.WeatherApiModule
@@ -18,5 +18,5 @@ interface ScreenComponent {
     }
 
     fun inject(fragment: CurrentWeatherFragment)
-    fun inject(activity: MainActivity)
+    fun inject(screenActivity: MainScreenActivity)
 }
