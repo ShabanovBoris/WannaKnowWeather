@@ -3,11 +3,11 @@ package com.bosha.wannaknowweather.utils.LocationPermisson
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import com.bosha.domain.common.WeatherCoordinatesLocation
+import com.bosha.domain.common.WeatherCoordinates
 import com.google.android.gms.location.LocationServices
 
 @SuppressLint("MissingPermission")
-fun Context.getLastLocation(block: ((coordinates: WeatherCoordinatesLocation) -> Unit)? = null): Boolean {
+fun Context.getLastLocation(block: ((coordinates: WeatherCoordinates) -> Unit)? = null): Boolean {
 
     if (!hasLocationPermission) return false
 
@@ -16,7 +16,7 @@ fun Context.getLastLocation(block: ((coordinates: WeatherCoordinatesLocation) ->
             if (taskLocation.isSuccessful && taskLocation.result != null) {
 
                 block?.invoke(
-                    WeatherCoordinatesLocation(
+                    WeatherCoordinates(
                         taskLocation.result.latitude,
                         taskLocation.result.longitude
                     )

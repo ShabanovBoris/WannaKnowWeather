@@ -10,11 +10,12 @@
         android:id="@+id/tv_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="72sp"
+        android:textSize="@dimen/temp_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.10"
         tools:text="34" />
 
     <TextView
@@ -27,13 +28,16 @@
         app:layout_constraintTop_toTopOf="@+id/tv_temp" />
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_current"
         android:layout_width="0dp"
         android:layout_height="?android:actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center">
 
         <TextView
+            android:id="@+id/tv_current_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -42,14 +46,22 @@
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/big_item_margin"
         android:text="@string/_7_day_forecast"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_temp" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,4 +18,13 @@ interface WeatherApi {
         @Query("units") units: String = "metric",
         @Query("exclude") exclude: String = "hourly,daily,minutely,alerts",
     ): WeatherResponse
+
+    @Headers("X-API-KEY:${BuildConfig.THE_WEATHER_APIKEY}")
+    @GET("onecall")
+    suspend fun hourlyWeatherByLocation(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("units") units: String = "metric",
+        @Query("exclude") exclude: String = "current,daily,minutely,alerts",
+    ): WeatherResponse
 }

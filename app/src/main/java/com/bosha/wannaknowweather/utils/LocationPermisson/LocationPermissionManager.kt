@@ -18,7 +18,7 @@ val Context.hasLocationPermission: Boolean
         ) == PackageManager.PERMISSION_GRANTED
 
 /**
- * Need to close after use for avoid memory leaks
+ * Need to call [clear] after use for avoid memory leaks
  */
 class LocationPermissionManager(
     private var activity: ComponentActivity?
@@ -29,15 +29,16 @@ class LocationPermissionManager(
     fun locationPermission(block: (granted: Boolean) -> Unit) {
         if (requireNotNull(activity).hasLocationPermission) {
             block(true)
-        } else {
-            if (registry == null)
-                registry = requireNotNull(activity)
-                    .registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-                        block(it)
-                    }
-            registry?.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            return
         }
 
+        if (registry == null)
+            registry = requireNotNull(activity)
+                .registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                    block(it)
+                }
+
+        registry?.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
     fun locationPermissionWithSnackBar(anchorView: View, onSuccess: Context.() -> Unit) {

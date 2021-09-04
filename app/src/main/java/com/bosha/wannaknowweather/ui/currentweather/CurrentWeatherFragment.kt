@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.bosha.domain.common.WeatherCoordinatesLocation
-import com.bosha.domain.entities.CurrentWeather
+import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.wannaknowweather.databinding.CurrentWeatherFragmentBinding
 import com.bosha.wannaknowweather.ui.ViewModelFactory
 import com.bosha.wannaknowweather.utils.LocationPermisson.LocationPermissionManager
@@ -24,7 +22,7 @@ import javax.inject.Inject
 class CurrentWeatherFragment : Fragment() {
 
     private var _binding: CurrentWeatherFragmentBinding? = null
-    val binding get() = checkNotNull(_binding)
+    private val binding get() = checkNotNull(_binding)
 
     @Inject
     lateinit var factory: ViewModelFactory
@@ -56,16 +54,21 @@ class CurrentWeatherFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.weatherResultFlow
                 .onEach(::handleResult)
-                .launchIn(viewLifecycleOwner.lifecycleScope)
+                .launchIn(this)
 
             viewModel.sideEffect
                 .onEach(::handleSideEffect)
-                .launchIn(viewLifecycleOwner.lifecycleScope)
+                .launchIn(this)
         }
     }
 
-    private fun handleResult(weather: CurrentWeather?) {
-        binding.tvTemp.text = weather?.temp.toString()
+    private fun handleResult(weather: CurrentWeatherViewModel.CurrentWeatherUi?) {
+        binding.tvTemp.text = weather?.weather?.temp.toString()
+        if (weather?.locality.isNullOrEmpty()) {
+            binding.tvCurrentCity.text = weather?.areaName
+        } else {
+            binding.tvCurrentCity.text = weather?.locality
+        }
     }
 
     private fun handleSideEffect(sideEffect: CurrentWeatherViewModel.SideEffectActions) {
@@ -82,8 +85,8 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    private fun handleLocation(weatherCoordinatesLocation: WeatherCoordinatesLocation){
-        viewModel.lastKnownLocation = weatherCoordinatesLocation
+    private fun handleLocation(weatherCoordinates: WeatherCoordinates) {
+        viewModel.lastKnown = weatherCoordinates
     }
 
     override fun onDestroyView() {
@@ -91,6 +94,4 @@ class CurrentWeatherFragment : Fragment() {
         locationPermissionManager?.clear()
         super.onDestroyView()
     }
-
-
 }

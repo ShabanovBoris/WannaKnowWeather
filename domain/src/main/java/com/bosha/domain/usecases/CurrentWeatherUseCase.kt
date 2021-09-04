@@ -1,11 +1,11 @@
 package com.bosha.domain.usecases
 
-import com.bosha.domain.common.WeatherCoordinatesLocation
+import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.repositories.WeatherRepository
 
 class CurrentWeatherUseCase (private val repository: WeatherRepository) {
 
-     operator fun invoke(weatherCoordinatesLocation: WeatherCoordinatesLocation) =
-        repository.getCurrentWeather(weatherCoordinatesLocation)
+     operator fun invoke(weatherCoordinates: WeatherCoordinates) =
+        repository.getCurrentWeather(weatherCoordinates)
 
 }
