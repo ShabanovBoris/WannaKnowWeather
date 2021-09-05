@@ -7,7 +7,7 @@ import com.bosha.wannaknowweather.ui.di.ScreenComponent
 import com.bosha.wannaknowweather.utils.ConnectivityChecker
 import com.bosha.wannaknowweather.utils.createScreenComponent
 
-class MainScreenActivity : AppCompatActivity(R.layout.activity_main), Screen {
+class MainScreenActivity : AppCompatActivity(R.layout.activity_main), Screen /**,LocationHolder*/ {
 
     override val screenComponent: ScreenComponent by lazy {
         createScreenComponent()

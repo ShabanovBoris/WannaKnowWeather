@@ -10,7 +10,7 @@
         android:id="@+id/tv_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/temp_text_size"
+        android:textSize="@dimen/big_temp_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/celseus"
+        android:text="@string/celsius"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/tv_temp"
@@ -49,19 +49,22 @@
         android:id="@+id/materialButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/big_item_margin"
+        android:layout_marginHorizontal="@dimen/big_space"
         android:text="@string/_7_day_forecast"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_hourly_forecast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_temp" />
+        tools:listitem="@layout/hourly_forecast_item"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temp"
+        android:padding="@dimen/main_space"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

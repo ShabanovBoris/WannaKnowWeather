@@ -1,4 +1,4 @@
-package com.bosha.wannaknowweather.utils.LocationPermisson
+package com.bosha.wannaknowweather.utils.locationPermisson
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">WannaKnowWeather</string>
-    <string name="celseus">°C</string>
+    <string name="celsius">°C</string>
+    <string name="celsius_sign">°</string>
+    <string name="wind_speed_metric">km/h</string>
     <string name="_7_day_forecast">7-day forecast</string>
     <string name="connect_info">No internet connection</string>
+    <string name="search_by_name">search by name</string>
 
 </resources>

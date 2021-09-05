@@ -8,5 +8,18 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
     </style>
 
+    <style name="Widget.WKW.EditTextMaterialLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width" >0dp</item>
+        <item name="android:layout_height" >wrap_content</item>
+        <item name="android:layout_marginStart" >@dimen/main_space</item>
+        <item name="android:layout_marginEnd" >@dimen/main_space</item>
+        <item name="boxCornerRadiusTopStart" >@dimen/main_space</item>
+        <item name="boxCornerRadiusTopEnd" >@dimen/main_space</item>
+        <item name="boxCornerRadiusBottomEnd" >@dimen/main_space</item>
+        <item name="boxCornerRadiusBottomStart" >@dimen/main_space</item>
+        <item name="boxStrokeColor" >@color/edit_text_color</item>
+        <item name="hintTextColor" >@color/edit_text_color</item>
+
+    </style>
 
 </resources>

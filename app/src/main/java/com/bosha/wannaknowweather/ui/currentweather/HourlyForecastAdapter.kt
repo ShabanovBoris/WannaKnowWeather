@@ -1,0 +1,48 @@
+package com.bosha.wannaknowweather.ui.currentweather
+
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bosha.domain.entities.HourlyForecast
+import com.bosha.wannaknowweather.R
+import com.bosha.wannaknowweather.databinding.HourlyForecastItemBinding
+import com.bosha.wannaknowweather.utils.unixSecondsToTime
+
+class HourlyForecastAdapter :
+    RecyclerView.Adapter<HourlyForecastAdapter.HourlyForecastViewHolder>() {
+
+    var forecastList: List<HourlyForecast> = emptyList()
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyForecastViewHolder =
+        HourlyForecastViewHolder(
+            HourlyForecastItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+
+    override fun onBindViewHolder(holder: HourlyForecastViewHolder, position: Int) {
+        holder.binding.apply {
+            tvTime.text = forecastList[position].dt.unixSecondsToTime()
+            tvTemp.text =  forecastList[position].temp.toString()
+            tvTemp.append(tvTemp.context.getString(R.string.celsius_sign))
+            ivIconWeather // TODO
+            tvWindSpeed.text =  forecastList[position].windSpeed.toString()
+            tvWindSpeed.append(tvTemp.context.getString(R.string.wind_speed_metric))
+        }
+    }
+
+    override fun getItemCount(): Int = forecastList.size
+
+
+    class HourlyForecastViewHolder(val binding: HourlyForecastItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
+}
+
