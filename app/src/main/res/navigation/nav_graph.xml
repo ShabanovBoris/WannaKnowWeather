@@ -17,10 +17,5 @@
         android:id="@+id/selectAreaFragment"
         android:name="com.bosha.wannaknowweather.ui.selectarea.SelectAreaFragment"
         android:label="select_area_fragment"
-        tools:layout="@layout/select_area_fragment" >
-        <action
-            android:id="@+id/action_selectAreaFragment_to_currentWeatherFragment"
-            app:destination="@id/currentWeatherFragment"
-            app:launchSingleTop="true" />
-    </fragment>
+        tools:layout="@layout/select_area_fragment" />
 </navigation>

@@ -34,7 +34,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center">
+        android:gravity="center"
+        app:navigationIcon="@drawable/ic_search"
+        app:menu="@menu/tool_bar_menu">
 
         <TextView
             android:id="@+id/tv_current_city"
@@ -46,7 +48,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/materialButton"
+        android:id="@+id/b_to_7day_forecast"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/big_space"

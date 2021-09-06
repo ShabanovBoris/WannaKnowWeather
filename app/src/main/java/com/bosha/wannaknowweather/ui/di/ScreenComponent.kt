@@ -7,6 +7,7 @@ import com.bosha.wannaknowweather.di.WeatherGeocoderModule
 import com.bosha.wannaknowweather.di.scopes.ScreenScope
 import com.bosha.wannaknowweather.ui.MainScreenActivity
 import com.bosha.wannaknowweather.ui.currentweather.CurrentWeatherFragment
+import com.bosha.wannaknowweather.ui.selectarea.SelectAreaFragment
 import dagger.Subcomponent
 
 @ScreenScope
@@ -22,5 +23,6 @@ interface ScreenComponent {
     }
 
     fun inject(fragment: CurrentWeatherFragment)
+    fun inject(fragment: SelectAreaFragment)
     fun inject(screenActivity: MainScreenActivity)
 }

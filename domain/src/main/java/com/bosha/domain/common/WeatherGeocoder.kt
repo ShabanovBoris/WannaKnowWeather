@@ -41,7 +41,7 @@ class WeatherGeocoder(
         return try {
             geocoder.getFromLocationName(
                 name,
-                10
+                25
             )
         } catch (e: IOException) {
             Log.e(this::class.java.simpleName, "getLocationName error: ${e.localizedMessage}")

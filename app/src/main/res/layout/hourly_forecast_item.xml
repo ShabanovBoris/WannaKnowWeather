@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_marginEnd="@dimen/main_space">
+    android:layout_marginEnd="@dimen/main_space"
+    android:gravity="center">
 
     <TextView
         android:id="@+id/tv_time"
@@ -12,30 +13,26 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:alpha="0.5"
-        tools:text="24:00"
-        android:layout_gravity="center"/>
+        tools:text="24:00"/>
 
     <TextView
         android:id="@+id/tv_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        tools:text="34"
-        android:layout_gravity="center"/>
+        tools:text="34"/>
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_icon_weather"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:src="@android:drawable/ic_lock_idle_low_battery"
-        android:layout_gravity="center"/>
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        tools:src="@android:drawable/ic_lock_idle_low_battery"/>
 
     <TextView
         android:id="@+id/tv_wind_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="12.2km/s"
         android:alpha="0.5"/>
 

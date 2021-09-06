@@ -6,7 +6,6 @@ import com.bosha.wannaknowweather.di.DaggerAppComponent
 
 class WeatherApp: Application() {
 
-
     lateinit var appComponent: AppComponent private set
 
     override fun onCreate() {

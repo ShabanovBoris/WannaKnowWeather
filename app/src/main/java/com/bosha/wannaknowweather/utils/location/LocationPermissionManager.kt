@@ -1,4 +1,4 @@
-package com.bosha.wannaknowweather.utils.locationPermisson
+package com.bosha.wannaknowweather.utils.location
 
 import android.Manifest
 import android.content.Context

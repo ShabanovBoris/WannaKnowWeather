@@ -1,13 +1,18 @@
 package com.bosha.wannaknowweather.ui.currentweather
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.bosha.data.api.WeatherConstants
 import com.bosha.domain.entities.HourlyForecast
 import com.bosha.wannaknowweather.R
 import com.bosha.wannaknowweather.databinding.HourlyForecastItemBinding
 import com.bosha.wannaknowweather.utils.unixSecondsToTime
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import kotlin.math.roundToInt
 
 class HourlyForecastAdapter :
     RecyclerView.Adapter<HourlyForecastAdapter.HourlyForecastViewHolder>() {
@@ -31,9 +36,9 @@ class HourlyForecastAdapter :
     override fun onBindViewHolder(holder: HourlyForecastViewHolder, position: Int) {
         holder.binding.apply {
             tvTime.text = forecastList[position].dt.unixSecondsToTime()
-            tvTemp.text =  forecastList[position].temp.toString()
+            tvTemp.text =  forecastList[position].temp.roundToInt().toString()
             tvTemp.append(tvTemp.context.getString(R.string.celsius_sign))
-            ivIconWeather // TODO
+            ivIconWeather.load(WeatherConstants.getImageUrl(forecastList[position].weather[0].icon))
             tvWindSpeed.text =  forecastList[position].windSpeed.toString()
             tvWindSpeed.append(tvTemp.context.getString(R.string.wind_speed_metric))
         }

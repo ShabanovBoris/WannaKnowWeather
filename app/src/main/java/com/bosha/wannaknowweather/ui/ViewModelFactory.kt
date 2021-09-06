@@ -7,6 +7,7 @@ import com.bosha.domain.usecases.CurrentWeatherUseCase
 import com.bosha.domain.usecases.HourlyWeatherForecastUseCase
 import com.bosha.wannaknowweather.di.scopes.ScreenScope
 import com.bosha.wannaknowweather.ui.currentweather.CurrentWeatherViewModel
+import com.bosha.wannaknowweather.ui.selectarea.SelectAreaViewModel
 import javax.inject.Inject
 
 @ScreenScope
@@ -21,6 +22,11 @@ class ViewModelFactory @Inject constructor(
         CurrentWeatherViewModel::class.java -> CurrentWeatherViewModel(
             currentWeatherUseCase,
             hourlyWeatherForecastUseCase,
+            weatherGeocoder
+        )
+
+        SelectAreaViewModel::class.java -> SelectAreaViewModel(
+            currentWeatherUseCase,
             weatherGeocoder
         )
 

@@ -24,7 +24,7 @@ fun <T> Result<T>.isSuccess(): Boolean {
     return this is SuccessResult
 }
 
-fun <T> Flow<Result<T>>.takeIfSuccess(onError: ((Exception) -> Unit) = {}): Flow<SuccessResult<T>> =
+fun <T> Flow<Result<T>>.takeSuccess(onError: ((Exception) -> Unit) = {}): Flow<SuccessResult<T>> =
     takeWhile {
         if (it.isSuccess()) {
             return@takeWhile true

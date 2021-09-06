@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.common.WeatherGeocoder
-import com.bosha.domain.common.takeIfSuccess
+import com.bosha.domain.common.takeSuccess
 import com.bosha.domain.entities.CurrentWeather
 import com.bosha.domain.entities.HourlyForecast
 import com.bosha.domain.usecases.CurrentWeatherUseCase
@@ -41,47 +41,51 @@ class CurrentWeatherViewModel(
         MutableStateFlow(null)
     val weather get() = _weather.asStateFlow()
 
-    private val _sideEffect: MutableStateFlow<SideEffectActions> =
-        MutableStateFlow(SideEffectActions.LOADING)
+    private val _sideEffect: MutableStateFlow<SideEffects> =
+        MutableStateFlow(SideEffects.LOADING)
     val sideEffect get() = _sideEffect.asStateFlow()
 
     init {
-        _sideEffect.value = SideEffectActions.LOADING
         val location = lastKnown
-        if (location == null) {
-            //TODO the first query in app
-            _sideEffect.value = SideEffectActions.EMPTY_LOCATION
-        } else {
-            loadData(location)
+//        if (location == null) {
+//            //TODO the first query in app
+//            _sideEffect.value = SideEffects.EMPTY_LOCATION
+//        } else {
+//            loadData(location)
+//        }
+        when (location) {
+            null -> _sideEffect.value = SideEffects.EMPTY_LOCATION
+            else -> loadData(location)
         }
-
-//        Log.e("TAG", "locations " + weatherGeocoder.getLocationsByName("Тула").toString())
     }
 
     private fun loadData(coordinates: WeatherCoordinates) = viewModelScope.launch(handler) {
-        _sideEffect.value = SideEffectActions.LOADING
-        val name = weatherGeocoder.getAreaName(coordinates)
+        _sideEffect.value = SideEffects.LOADING
+        val areaName = weatherGeocoder.getAreaName(coordinates)
 
-        val hourlyFlow = hourlyWeatherForecastUseCase(coordinates)
-            .takeIfSuccess {
-                _sideEffect.value = SideEffectActions.ERROR
+        /**
+         * Combine 2 flows(1 day forecast and current weather) in 1 data class
+         */
+        val hourlyForecast = hourlyWeatherForecastUseCase(coordinates)
+            .takeSuccess {
+                _sideEffect.value = SideEffects.ERROR
             }
 
         currentWeatherUseCase(coordinates)
-            .takeIfSuccess {
-                _sideEffect.value = SideEffectActions.ERROR
+            .takeSuccess {
+                _sideEffect.value = SideEffects.ERROR
             }
-            .combine(hourlyFlow) { current, forecast ->
+            .combine(hourlyForecast) { current, forecast ->
                 WeatherUi(
                     current.data,
                     forecast.data,
-                    name[0],
-                    name[1]
+                    areaName[0],
+                    areaName[1]
                 )
             }
             .collect {
                 _weather.value = it
-                _sideEffect.value = SideEffectActions.LOADED
+                _sideEffect.value = SideEffects.LOADED
             }
     }
 
@@ -93,7 +97,7 @@ class CurrentWeatherViewModel(
 //        }
 
 
-    enum class SideEffectActions {
+    enum class SideEffects {
         LOADING,
         ERROR,
         LOADED,
