@@ -1,5 +1,6 @@
 package com.bosha.wannaknowweather.ui.currentweather
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,10 @@ import com.bosha.domain.entities.CurrentWeather
 import com.bosha.domain.entities.HourlyForecast
 import com.bosha.domain.usecases.CurrentWeatherUseCase
 import com.bosha.domain.usecases.HourlyWeatherForecastUseCase
+import com.bosha.wannaknowweather.utils.listenLocation
+import com.bosha.wannaknowweather.utils.location
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -20,7 +24,8 @@ import kotlinx.coroutines.launch
 class CurrentWeatherViewModel(
     private val currentWeatherUseCase: CurrentWeatherUseCase,
     private val hourlyWeatherForecastUseCase: HourlyWeatherForecastUseCase,
-    private val weatherGeocoder: WeatherGeocoder
+    private val weatherGeocoder: WeatherGeocoder,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
@@ -30,12 +35,12 @@ class CurrentWeatherViewModel(
         )
     }
 
-    //TODO create cache in future
-    var lastKnown: WeatherCoordinates? = null
+    var lastKnownLocation: WeatherCoordinates?
         set(value) {
-            field = value
+            sharedPreferences.location = value
             loadData(requireNotNull(value))
         }
+        get() = sharedPreferences.location
 
     private val _weather: MutableStateFlow<WeatherUi?> =
         MutableStateFlow(null)
@@ -46,16 +51,15 @@ class CurrentWeatherViewModel(
     val sideEffect get() = _sideEffect.asStateFlow()
 
     init {
-        val location = lastKnown
-//        if (location == null) {
-//            //TODO the first query in app
-//            _sideEffect.value = SideEffects.EMPTY_LOCATION
-//        } else {
-//            loadData(location)
-//        }
+        val location = lastKnownLocation
         when (location) {
             null -> _sideEffect.value = SideEffects.EMPTY_LOCATION
             else -> loadData(location)
+        }
+        viewModelScope.launch {
+            sharedPreferences.listenLocation()
+                .collect {
+                    loadData(it) }
         }
     }
 
@@ -88,14 +92,6 @@ class CurrentWeatherViewModel(
                 _sideEffect.value = SideEffects.LOADED
             }
     }
-
-
-//        viewModelScope.launch {
-//            getCachePizzaUseCase().collect {
-//                _pizzaResultFlow.value = it
-//            }
-//        }
-
 
     enum class SideEffects {
         LOADING,

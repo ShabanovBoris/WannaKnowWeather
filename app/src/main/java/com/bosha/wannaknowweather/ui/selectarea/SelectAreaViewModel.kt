@@ -1,19 +1,23 @@
 package com.bosha.wannaknowweather.ui.selectarea
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.common.WeatherGeocoder
 import com.bosha.domain.usecases.CurrentWeatherUseCase
+import com.bosha.wannaknowweather.utils.location
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class SelectAreaViewModel(
     private val currentWeatherUseCase: CurrentWeatherUseCase,
-    private val weatherGeocoder: WeatherGeocoder
+    private val weatherGeocoder: WeatherGeocoder,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
     private val handler = CoroutineExceptionHandler { _, throwable ->
         Log.e(
@@ -28,9 +32,9 @@ class SelectAreaViewModel(
 
     //TODO on worker thread
     fun findCity(cityName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(handler) {
             _searchResult.value = weatherGeocoder.getLocationsByName(cityName).map {
-                Log.e("TAG", "findCity: $it", )
+                Log.e("TAG", "findCity: $it")
                 SearchResult(
                     it.getAddressLine(0),
                     WeatherCoordinates(
@@ -41,6 +45,10 @@ class SelectAreaViewModel(
                 )
             }
         }
+    }
+
+    fun selectLocation(coordinates: WeatherCoordinates){
+        sharedPreferences.location = coordinates
     }
 
     data class SearchResult(

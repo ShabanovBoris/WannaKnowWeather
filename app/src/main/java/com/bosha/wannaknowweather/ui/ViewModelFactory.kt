@@ -1,5 +1,6 @@
 package com.bosha.wannaknowweather.ui
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bosha.domain.common.WeatherGeocoder
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class ViewModelFactory @Inject constructor(
     private val currentWeatherUseCase: CurrentWeatherUseCase,
     private val hourlyWeatherForecastUseCase: HourlyWeatherForecastUseCase,
-    private val weatherGeocoder: WeatherGeocoder
+    private val weatherGeocoder: WeatherGeocoder,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = when (modelClass) {
@@ -22,12 +24,14 @@ class ViewModelFactory @Inject constructor(
         CurrentWeatherViewModel::class.java -> CurrentWeatherViewModel(
             currentWeatherUseCase,
             hourlyWeatherForecastUseCase,
-            weatherGeocoder
+            weatherGeocoder,
+            sharedPreferences
         )
 
         SelectAreaViewModel::class.java -> SelectAreaViewModel(
             currentWeatherUseCase,
-            weatherGeocoder
+            weatherGeocoder,
+            sharedPreferences
         )
 
         else -> error("$modelClass is not registered ViewModel")

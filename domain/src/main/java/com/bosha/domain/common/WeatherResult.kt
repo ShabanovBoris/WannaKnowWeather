@@ -24,6 +24,9 @@ fun <T> Result<T>.isSuccess(): Boolean {
     return this is SuccessResult
 }
 
+/**
+ * Take only SuccessResult or do lambda on ErrorResult
+ */
 fun <T> Flow<Result<T>>.takeSuccess(onError: ((Exception) -> Unit) = {}): Flow<SuccessResult<T>> =
     takeWhile {
         if (it.isSuccess()) {

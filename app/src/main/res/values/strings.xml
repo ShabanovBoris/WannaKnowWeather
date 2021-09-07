@@ -7,5 +7,6 @@
     <string name="connect_info">No internet connection</string>
     <string name="enter_location">Enter location</string>
     <string name="location">location</string>
+    <string name="enter_the_exact_name_of_the_location_on_any_language">Enter the exact name of the location on any language</string>
 
 </resources>

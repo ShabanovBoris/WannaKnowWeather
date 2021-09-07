@@ -26,17 +26,43 @@ class LocationPermissionManager(
 
     private var registry: ActivityResultLauncher<String>? = null
 
-    fun locationPermission(block: (granted: Boolean) -> Unit) {
-        if (requireNotNull(activity).hasLocationPermission) {
-            block(true)
-            return
-        }
+    private val listeners = mutableSetOf<(Boolean) -> Unit>()
 
+    private fun executeListeners(boolean: Boolean) {
+        listeners.forEach {
+            it(boolean)
+        }
+    }
+
+    init {
         if (registry == null)
             registry = requireNotNull(activity)
                 .registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-                    block(it)
+                    executeListeners(it)
                 }
+    }
+
+    fun addOnPermissionListener(action: (Boolean) -> Unit) {
+        listeners.add(action)
+    }
+
+    fun deleteOnPermissionListener(action: (Boolean) -> Unit) {
+        listeners.remove(action)
+    }
+
+    fun locationPermission(block: ((granted: Boolean) -> Unit)?) {
+        block?.let {
+            val listenerWrapper:(granted: Boolean) -> Unit = {
+                block(it)
+                deleteOnPermissionListener(block)
+            }
+            addOnPermissionListener(listenerWrapper)
+        }
+
+        if (requireNotNull(activity).hasLocationPermission) {
+            executeListeners(true)
+            return
+        }
 
         registry?.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
@@ -62,6 +88,7 @@ class LocationPermissionManager(
     fun clear() {
         activity = null
         registry = null
+        listeners.clear()
     }
 }
 

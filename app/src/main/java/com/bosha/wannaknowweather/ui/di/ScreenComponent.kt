@@ -1,5 +1,6 @@
 package com.bosha.wannaknowweather.ui.di
 
+import android.content.SharedPreferences
 import com.bosha.wannaknowweather.di.DataModule
 import com.bosha.wannaknowweather.di.UseCaseModule
 import com.bosha.wannaknowweather.di.WeatherApiModule
@@ -8,6 +9,8 @@ import com.bosha.wannaknowweather.di.scopes.ScreenScope
 import com.bosha.wannaknowweather.ui.MainScreenActivity
 import com.bosha.wannaknowweather.ui.currentweather.CurrentWeatherFragment
 import com.bosha.wannaknowweather.ui.selectarea.SelectAreaFragment
+import com.bosha.wannaknowweather.utils.location.LocationPermissionManager
+import dagger.BindsInstance
 import dagger.Subcomponent
 
 @ScreenScope
@@ -19,7 +22,10 @@ interface ScreenComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(): ScreenComponent
+        fun create(
+            @BindsInstance preferences: SharedPreferences,
+            @BindsInstance locationPermissionManager: LocationPermissionManager
+        ): ScreenComponent
     }
 
     fun inject(fragment: CurrentWeatherFragment)

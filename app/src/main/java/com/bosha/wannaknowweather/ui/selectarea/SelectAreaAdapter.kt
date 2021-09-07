@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bosha.wannaknowweather.ui.selectarea.SelectAreaViewModel.SearchResult
+import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.wannaknowweather.databinding.SearchItemBinding
+import com.bosha.wannaknowweather.ui.selectarea.SelectAreaViewModel.SearchResult
 import kotlin.math.roundToInt
 
-class SelectAreaAdapter(private val onClick: () -> Unit) : ListAdapter<SearchResult, SelectAreaAdapter.SearchCityViewHolder>(
-    DiffCallback()
-) {
+class SelectAreaAdapter(private val onClick: (WeatherCoordinates) -> Unit) :
+    ListAdapter<SearchResult, SelectAreaAdapter.SearchCityViewHolder>(
+        DiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchCityViewHolder {
         val binding = SearchItemBinding.inflate(
@@ -19,13 +21,12 @@ class SelectAreaAdapter(private val onClick: () -> Unit) : ListAdapter<SearchRes
             parent,
             false
         )
-            .apply {
-                root.setOnClickListener {
-                    onClick()
-                }
+        return SearchCityViewHolder(binding).apply {
+            binding.root.setOnClickListener {
+                val coords = getItem(adapterPosition).coordinates
+                onClick(WeatherCoordinates(coords.lat, coords.lon))
             }
-
-        return SearchCityViewHolder(binding)
+        }
     }
 
 
@@ -37,7 +38,8 @@ class SelectAreaAdapter(private val onClick: () -> Unit) : ListAdapter<SearchRes
         }
     }
 
-    class SearchCityViewHolder(val binding: SearchItemBinding) : RecyclerView.ViewHolder(binding.root)
+    class SearchCityViewHolder(val binding: SearchItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
 }
 
@@ -48,5 +50,5 @@ private class DiffCallback : DiffUtil.ItemCallback<SearchResult>() {
 
 
     override fun areContentsTheSame(oldItem: SearchResult, newItem: SearchResult): Boolean =
-        newItem.coordinates  == oldItem.coordinates
+        newItem.coordinates == oldItem.coordinates
 }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/b_location"
         android:title="@string/location"
         android:icon="@drawable/ic_location"
         app:showAsAction="always"/>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,11 +18,11 @@ import com.bosha.wannaknowweather.ui.ViewModelFactory
 import com.bosha.wannaknowweather.utils.injectDeps
 import com.bosha.wannaknowweather.utils.location.LocationPermissionManager
 import com.bosha.wannaknowweather.utils.location.getLastLocation
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import kotlin.math.roundToInt
-
 
 class CurrentWeatherFragment : Fragment() {
 
@@ -30,9 +31,11 @@ class CurrentWeatherFragment : Fragment() {
 
     @Inject
     lateinit var factory: ViewModelFactory
+
     private val viewModel by viewModels<CurrentWeatherViewModel> { factory }
 
-    private var locationPermissionManager: LocationPermissionManager? = null
+    @Inject
+    lateinit var locationPermissionManager: LocationPermissionManager
 
     override fun onAttach(context: Context) {
         injectDeps()
@@ -44,19 +47,22 @@ class CurrentWeatherFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = CurrentWeatherFragmentBinding.inflate(inflater, container, false)
-        geCurrentLocation()
         setUpRecycler()
-        binding.tbCurrent.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_currentWeatherFragment_to_selectAreaFragment)
-        }
+        setUpButtons()
         return binding.root
     }
 
-    private fun geCurrentLocation() {
-        locationPermissionManager = LocationPermissionManager(requireActivity()).also {
-            it.locationPermissionWithSnackBar(binding.root) {
-                getLastLocation(::handleLocation)
+    private fun setUpButtons() {
+        binding.tbCurrent.setNavigationOnClickListener {
+            findNavController().navigate(R.id.action_currentWeatherFragment_to_selectAreaFragment)
+        }
+        binding.tbCurrent.setOnMenuItemClickListener {
+            if (it.itemId == R.id.b_location) {
+                locationPermissionManager.locationPermission { granted ->
+                    if (granted) requireContext().getLastLocation(::handleLocation)
+                }
             }
+            return@setOnMenuItemClickListener true
         }
     }
 
@@ -80,12 +86,19 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
+    private fun onFirstPermissionQuery() {
+        locationPermissionManager.locationPermissionWithSnackBar(binding.root) {
+            getLastLocation(::handleLocation)
+        }
+    }
+
     private fun handleResult(weather: CurrentWeatherViewModel.WeatherUi?) {
         weather ?: return
         binding.apply {
             tvTemp.text = weather.currentWeather.temp.roundToInt().toString()
             (rvHourlyForecast.adapter as HourlyForecastAdapter).forecastList =
                 weather.forecast
+            tvCelsiusSign.isVisible = true
 
             // in example [locality] is Moscow, [areaName] is Moscow oblast'
             if (weather.locality.isEmpty()) {
@@ -96,6 +109,7 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
+    //TODO
     private fun handleSideEffect(sideEffect: CurrentWeatherViewModel.SideEffects) {
         when (sideEffect) {
             CurrentWeatherViewModel.SideEffects.LOADING -> {
@@ -114,12 +128,16 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun handleLocation(weatherCoordinates: WeatherCoordinates) {
-        viewModel.lastKnown = weatherCoordinates
+        viewModel.lastKnownLocation = weatherCoordinates
     }
 
     override fun onDestroyView() {
         _binding = null
-        locationPermissionManager?.clear()
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        locationPermissionManager.clear()
+        super.onDestroy()
     }
 }

@@ -1,10 +1,12 @@
 package com.bosha.wannaknowweather.utils
 
+import android.content.SharedPreferences
 import com.bosha.wannaknowweather.WeatherApp
 import com.bosha.wannaknowweather.ui.MainScreenActivity
 import com.bosha.wannaknowweather.ui.currentweather.CurrentWeatherFragment
 import com.bosha.wannaknowweather.ui.di.Screen
 import com.bosha.wannaknowweather.ui.selectarea.SelectAreaFragment
+import com.bosha.wannaknowweather.utils.location.LocationPermissionManager
 
 
 internal fun <T> T.injectDeps() {
@@ -17,8 +19,11 @@ internal fun <T> T.injectDeps() {
     }
 }
 
-internal fun MainScreenActivity.createScreenComponent() =
-    (application as WeatherApp).appComponent.plusMainScreenComponent().create()
+internal fun MainScreenActivity.createScreenComponent(
+    prefs: SharedPreferences,
+    locManager: LocationPermissionManager
+) =
+    (application as WeatherApp).appComponent.plusMainScreenComponent().create(prefs, locManager)
         .apply {
             inject(this@createScreenComponent)
         }
