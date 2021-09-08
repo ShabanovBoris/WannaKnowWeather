@@ -9,7 +9,6 @@ data class DailyForecast(
     val moonrise: Int,
     val pressure: Int,
     val clouds: Int,
-//    val feelsLike: FeelsLike,
     val windGust: Double,
     val dt: Int,
     val pop: Double,

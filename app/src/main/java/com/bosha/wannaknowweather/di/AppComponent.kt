@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [RetrofitModule::class, Subcomponents::class]
+    modules = [RetrofitModule::class, Subcomponents::class, DispatcherModule::class]
 )
 interface AppComponent {
 
@@ -18,5 +18,4 @@ interface AppComponent {
     }
 
     fun plusMainScreenComponent(): ScreenComponent.Factory
-
 }

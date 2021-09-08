@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.common.WeatherGeocoder
-import com.bosha.domain.common.takeSuccess
+import com.bosha.domain.common.getSuccess
+import com.bosha.domain.common.takeSuccessOrElse
 import com.bosha.domain.entities.CurrentWeather
 import com.bosha.domain.entities.HourlyForecast
 import com.bosha.domain.usecases.CurrentWeatherUseCase
@@ -14,7 +15,6 @@ import com.bosha.domain.usecases.HourlyWeatherForecastUseCase
 import com.bosha.wannaknowweather.utils.listenLocation
 import com.bosha.wannaknowweather.utils.location
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -71,18 +71,18 @@ class CurrentWeatherViewModel(
          * Combine 2 flows(1 day forecast and current weather) in 1 data class
          */
         val hourlyForecast = hourlyWeatherForecastUseCase(coordinates)
-            .takeSuccess {
+            .takeSuccessOrElse {
                 _sideEffect.value = SideEffects.ERROR
             }
 
         currentWeatherUseCase(coordinates)
-            .takeSuccess {
+            .takeSuccessOrElse {
                 _sideEffect.value = SideEffects.ERROR
             }
             .combine(hourlyForecast) { current, forecast ->
                 WeatherUi(
                     current.data,
-                    forecast.data,
+                    forecast.data.drop(3).take(24),
                     areaName[0],
                     areaName[1]
                 )

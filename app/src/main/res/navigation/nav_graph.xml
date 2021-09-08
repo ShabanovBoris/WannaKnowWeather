@@ -12,10 +12,17 @@
         <action
             android:id="@+id/action_currentWeatherFragment_to_selectAreaFragment"
             app:destination="@id/selectAreaFragment" />
+        <action
+            android:id="@+id/action_currentWeatherFragment_to_dailyForecastFragment"
+            app:destination="@id/dailyForecastFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectAreaFragment"
         android:name="com.bosha.wannaknowweather.ui.selectarea.SelectAreaFragment"
         android:label="select_area_fragment"
         tools:layout="@layout/select_area_fragment" />
+    <fragment
+        android:id="@+id/dailyForecastFragment"
+        android:name="com.bosha.wannaknowweather.ui.dailyforecast.DailyForecastFragment"
+        android:label="DailyForecastFragment" />
 </navigation>

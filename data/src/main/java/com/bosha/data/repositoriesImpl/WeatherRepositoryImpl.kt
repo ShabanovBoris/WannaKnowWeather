@@ -6,6 +6,7 @@ import com.bosha.domain.common.Result
 import com.bosha.domain.common.SuccessResult
 import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.entities.CurrentWeather
+import com.bosha.domain.repositories.DailyForecastResult
 import com.bosha.domain.repositories.HourlyForecastResult
 import com.bosha.domain.repositories.WeatherRepository
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +29,11 @@ class WeatherRepositoryImpl @Inject constructor(
             .mapToResult()
     }
 
+    override fun getDailyForecastWeather(weatherCoordinates: WeatherCoordinates): Flow<DailyForecastResult> {
+        return dataSource.getDailyWeatherByLocation(weatherCoordinates)
+            .mapToResult()
+    }
+
     private fun <T> Flow<T>.mapToResult(): Flow<Result<T>> =
         map { SuccessResult(it) as Result<T> }
             .catch { cause ->
@@ -38,5 +44,4 @@ class WeatherRepositoryImpl @Inject constructor(
                     emit(ErrorResult(cause as Exception))
                 else throw cause
             }
-
 }

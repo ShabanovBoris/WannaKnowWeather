@@ -1,9 +1,7 @@
 package com.bosha.data.mappers
 
 import com.bosha.data.dto.WeatherResponse
-import com.bosha.domain.entities.CurrentWeather
-import com.bosha.domain.entities.HourlyForecast
-import com.bosha.domain.entities.Weather
+import com.bosha.domain.entities.*
 import javax.inject.Inject
 
 class WeatherResponseMapper @Inject constructor() {
@@ -58,6 +56,44 @@ class WeatherResponseMapper @Inject constructor() {
                 humidity = hourlyItem.humidity,
                 windSpeed = hourlyItem.windSpeed,
                 pop = hourlyItem.pop
+            )
+        }
+
+    fun WeatherResponse.mapToDailyForecast(): List<DailyForecast> =
+        daily.map { daily ->
+            DailyForecast(
+                temp = Temp(
+                    min = daily.temp.min,
+                    max = daily.temp.max,
+                    eve = daily.temp.eve,
+                    night = daily.temp.night,
+                    day = daily.temp.day,
+                    morn = daily.temp.morn
+                ),
+                uvi = daily.uvi,
+                pressure = daily.pressure,
+                clouds = daily.clouds,
+                windGust = daily.windGust ?: 0.0,
+                dt = daily.dt,
+                windDeg = daily.windDeg,
+                dewPoint = daily.dewPoint,
+                weather = daily.weather.map {
+                    Weather(
+                        it.icon,
+                        it.description,
+                        it.main,
+                        it.id
+                    )
+                },
+                humidity = daily.humidity,
+                windSpeed = daily.windSpeed,
+                pop = daily.pop,
+                sunset = daily.sunset,
+                moonset = daily.moonset,
+                sunrise = daily.sunrise,
+                moonPhase = daily.moonPhase,
+                moonrise = daily.moonrise,
+                rain = daily.rain ?: 0.0
             )
         }
 

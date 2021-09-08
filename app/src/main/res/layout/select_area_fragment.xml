@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:alpha="0.5"
         android:paddingHorizontal="@dimen/big_space"
-        android:text="@string/enter_the_exact_name_of_the_location_on_any_language"
+        android:text="@string/first_search"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

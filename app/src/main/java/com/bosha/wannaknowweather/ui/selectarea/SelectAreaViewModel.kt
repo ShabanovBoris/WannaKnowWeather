@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.common.WeatherGeocoder
+import com.bosha.domain.common.collectSuccess
 import com.bosha.domain.usecases.CurrentWeatherUseCase
 import com.bosha.wannaknowweather.utils.location
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class SelectAreaViewModel(
@@ -26,28 +26,33 @@ class SelectAreaViewModel(
         )
     }
 
-    private val _searchResult: MutableStateFlow<List<SearchResult>> =
+    private val _selectedResult: MutableStateFlow<List<SearchResult>> =
         MutableStateFlow(emptyList())
-    val searchResult get() = _searchResult.asStateFlow()
+    val selectedResult get() = _selectedResult.asStateFlow()
 
-    //TODO on worker thread
     fun findCity(cityName: String) {
         viewModelScope.launch(handler) {
-            _searchResult.value = weatherGeocoder.getLocationsByName(cityName).map {
-                Log.e("TAG", "findCity: $it")
-                SearchResult(
-                    it.getAddressLine(0),
-                    WeatherCoordinates(
-                        it.latitude,
-                        it.longitude
-                    ),
-                    12.0 // TODO STUB
-                )
+            val resultList = mutableListOf<SearchResult>()
+
+            weatherGeocoder.getLocationsByName(cityName).forEach {
+                val coords = WeatherCoordinates(it.latitude, it.longitude)
+
+                currentWeatherUseCase(coords).collectSuccess { weather ->
+                    resultList.add(
+                        SearchResult(
+                            it.getAddressLine(0),
+                            coords,
+                            weather.temp
+                        )
+                    )
+                }
             }
+
+            _selectedResult.value = resultList
         }
     }
 
-    fun selectLocation(coordinates: WeatherCoordinates){
+    fun selectLocation(coordinates: WeatherCoordinates) {
         sharedPreferences.location = coordinates
     }
 

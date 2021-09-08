@@ -25,8 +25,7 @@ class SelectAreaFragment : Fragment() {
     private var _binding: SelectAreaFragmentBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    @Inject
-    lateinit var factory: ViewModelFactory
+    @Inject lateinit var factory: ViewModelFactory
     private val viewModel by viewModels<SelectAreaViewModel> { factory }
 
     override fun onAttach(context: Context) {
@@ -40,14 +39,15 @@ class SelectAreaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = SelectAreaFragmentBinding.inflate(inflater, container, false)
-        setUpRecycler(binding)
+
+        setUpRecycler()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.searchResult
+            viewModel.selectedResult
                 .onEach(::handleResult)
                 .launchIn(this)
         }
@@ -59,7 +59,7 @@ class SelectAreaFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun setUpRecycler(binding: SelectAreaFragmentBinding) {
+    private fun setUpRecycler() {
         binding.rvCitySelect.apply {
             adapter = SelectAreaAdapter {
                 viewModel.selectLocation(it)

@@ -29,13 +29,10 @@ class CurrentWeatherFragment : Fragment() {
     private var _binding: CurrentWeatherFragmentBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    @Inject
-    lateinit var factory: ViewModelFactory
+    @Inject lateinit var factory: ViewModelFactory
+    @Inject lateinit var locationPermissionManager: LocationPermissionManager
 
     private val viewModel by viewModels<CurrentWeatherViewModel> { factory }
-
-    @Inject
-    lateinit var locationPermissionManager: LocationPermissionManager
 
     override fun onAttach(context: Context) {
         injectDeps()
@@ -52,20 +49,6 @@ class CurrentWeatherFragment : Fragment() {
         return binding.root
     }
 
-    private fun setUpButtons() {
-        binding.tbCurrent.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_currentWeatherFragment_to_selectAreaFragment)
-        }
-        binding.tbCurrent.setOnMenuItemClickListener {
-            if (it.itemId == R.id.b_location) {
-                locationPermissionManager.locationPermission { granted ->
-                    if (granted) requireContext().getLastLocation(::handleLocation)
-                }
-            }
-            return@setOnMenuItemClickListener true
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -79,10 +62,37 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        locationPermissionManager.clear()
+        super.onDestroy()
+    }
+
     private fun setUpRecycler() {
         binding.rvHourlyForecast.apply {
             adapter = HourlyForecastAdapter()
             setHasFixedSize(true)
+        }
+    }
+
+    private fun setUpButtons() {
+        binding.tbCurrent.setNavigationOnClickListener {
+            findNavController().navigate(R.id.action_currentWeatherFragment_to_selectAreaFragment)
+        }
+        binding.tbCurrent.setOnMenuItemClickListener {
+            if (it.itemId == R.id.b_location) {
+                locationPermissionManager.locationPermission { granted ->
+                    if (granted) requireContext().getLastLocation(::handleLocation)
+                }
+            }
+            return@setOnMenuItemClickListener true
+        }
+        binding.bTo7dayForecast.setOnClickListener {
+            findNavController().navigate(R.id.action_currentWeatherFragment_to_dailyForecastFragment)
         }
     }
 
@@ -96,8 +106,12 @@ class CurrentWeatherFragment : Fragment() {
         weather ?: return
         binding.apply {
             tvTemp.text = weather.currentWeather.temp.roundToInt().toString()
+
+            tvName.text = weather.currentWeather.weather[0].main
+
             (rvHourlyForecast.adapter as HourlyForecastAdapter).forecastList =
                 weather.forecast
+
             tvCelsiusSign.isVisible = true
 
             // in example [locality] is Moscow, [areaName] is Moscow oblast'
@@ -109,35 +123,29 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    //TODO
     private fun handleSideEffect(sideEffect: CurrentWeatherViewModel.SideEffects) {
         when (sideEffect) {
             CurrentWeatherViewModel.SideEffects.LOADING -> {
-                Toast.makeText(requireContext(), "LOADING", Toast.LENGTH_SHORT).show()
+                binding.pbLoading.show()
+                binding.bTo7dayForecast.isVisible = false
             }
             CurrentWeatherViewModel.SideEffects.ERROR -> {
-                Toast.makeText(requireContext(), "ERROR", Toast.LENGTH_SHORT).show()
+                binding.pbLoading.hide()
+                Toast.makeText(requireContext(), "Error loading data", Toast.LENGTH_LONG).show()
             }
             CurrentWeatherViewModel.SideEffects.LOADED -> {
-                Toast.makeText(requireContext(), "LOADED", Toast.LENGTH_SHORT).show()
+                binding.pbLoading.hide()
+                binding.tvHint.isVisible = false
+                binding.bTo7dayForecast.isVisible = true
             }
             CurrentWeatherViewModel.SideEffects.EMPTY_LOCATION -> {
-                Toast.makeText(requireContext(), "EMPTY_LOCATION", Toast.LENGTH_SHORT).show()
+                binding.pbLoading.hide()
+                binding.tvHint.isVisible = true
             }
         }
     }
 
     private fun handleLocation(weatherCoordinates: WeatherCoordinates) {
         viewModel.lastKnownLocation = weatherCoordinates
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        locationPermissionManager.clear()
-        super.onDestroy()
     }
 }

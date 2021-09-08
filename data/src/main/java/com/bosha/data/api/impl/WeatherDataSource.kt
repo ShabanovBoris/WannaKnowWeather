@@ -1,16 +1,15 @@
 package com.bosha.data.api.impl
 
+import android.util.Log
 import com.bosha.data.api.WeatherApi
 import com.bosha.data.mappers.WeatherResponseMapper
 import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.entities.CurrentWeather
+import com.bosha.domain.entities.DailyForecast
 import com.bosha.domain.entities.HourlyForecast
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class WeatherDataSource @Inject constructor(
@@ -33,4 +32,10 @@ class WeatherDataSource @Inject constructor(
             .map { mapper { it.mapToHourlyForecast() } }
             .flowOn(dispatcher ?: Dispatchers.Main.immediate)
 
+    fun getDailyWeatherByLocation(weatherCoordinates: WeatherCoordinates): Flow<List<DailyForecast>> =
+        flow {
+            emit(api.dailyWeatherByLocation(weatherCoordinates.lat, weatherCoordinates.lon))
+        }
+            .map { mapper { it.mapToDailyForecast() } }
+            .flowOn(dispatcher ?: Dispatchers.Main.immediate)
 }

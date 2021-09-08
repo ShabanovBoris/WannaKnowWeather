@@ -51,7 +51,7 @@ data class DailyItem(
 	@field:SerializedName("feels_like")
 	val feelsLike: FeelsLike,
 	@field:SerializedName("wind_gust")
-	val windGust: Double,
+	val windGust: Double?,
 	@field:SerializedName("dt")
 	val dt: Int,
 	@field:SerializedName("pop")
@@ -69,7 +69,7 @@ data class DailyItem(
 	@field:SerializedName("wind_speed")
 	val windSpeed: Double,
 	@field:SerializedName("rain")
-	val rain: Double
+	val rain: Double?
 ) : Parcelable
 
 @Parcelize

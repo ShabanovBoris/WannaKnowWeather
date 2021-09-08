@@ -15,7 +15,7 @@ class ErrorResult<T>(
     val exception: Exception
 ) : Result<T>
 
-fun <T> Result<T>.takeSuccess(): T? {
+fun <T> Result<T>.getSuccess(): T? {
     return if (this is SuccessResult) this.data
     else null
 }
@@ -27,7 +27,7 @@ fun <T> Result<T>.isSuccess(): Boolean {
 /**
  * Take only SuccessResult or do lambda on ErrorResult
  */
-fun <T> Flow<Result<T>>.takeSuccess(onError: ((Exception) -> Unit) = {}): Flow<SuccessResult<T>> =
+fun <T> Flow<Result<T>>.takeSuccessOrElse(onError: (Exception) -> Unit): Flow<SuccessResult<T>> =
     takeWhile {
         if (it.isSuccess()) {
             return@takeWhile true
@@ -35,7 +35,7 @@ fun <T> Flow<Result<T>>.takeSuccess(onError: ((Exception) -> Unit) = {}): Flow<S
             onError.invoke((it as ErrorResult<T>).exception)
             return@takeWhile false
         }
-    }.map { SuccessResult(it.takeSuccess()!!) }
+    }.map { SuccessResult(it.getSuccess()!!) }
 
 
 fun <T> Result<T>.takeResult(
@@ -48,14 +48,14 @@ fun <T> Result<T>.takeResult(
     }
 }
 
-suspend fun <T> Flow<Result<T>>.collectResult(
-    onSuccess: ((T) -> Unit),
-    onError: ((Exception) -> Unit) = {}
+suspend fun <T> Flow<Result<T>>.collectSuccess(
+    onSuccess: ((T) -> Unit)
 ) = collect {
     it.takeResult(
-        onSuccess = onSuccess,
-        onError = onError
+        onSuccess = onSuccess
     )
+
+    Result
 }
 
 
