@@ -8,8 +8,13 @@ import com.bosha.wannaknowweather.ui.di.ScreenComponent
 import com.bosha.wannaknowweather.utils.ConnectivityChecker
 import com.bosha.wannaknowweather.utils.createScreenComponent
 import com.bosha.wannaknowweather.utils.location.LocationPermissionManager
+import com.bosha.wannaknowweather.utils.location.getLastLocation
+import javax.inject.Inject
 
 class MainScreenActivity : AppCompatActivity(R.layout.activity_main), Screen{
+
+    @Inject
+    lateinit var permissionManager: LocationPermissionManager
 
     override val screenComponent: ScreenComponent by lazy {
         createScreenComponent(

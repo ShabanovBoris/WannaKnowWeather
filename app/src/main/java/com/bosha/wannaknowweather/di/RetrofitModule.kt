@@ -3,6 +3,7 @@ package com.bosha.wannaknowweather.di
 import com.bosha.wannaknowweather.BuildConfig
 import dagger.Module
 import dagger.Provides
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -23,16 +24,26 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+    fun provideOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        apikey: Interceptor
+    ): OkHttpClient =
         OkHttpClient().newBuilder()
             .addInterceptor(loggingInterceptor)
-            .addNetworkInterceptor(loggingInterceptor)
+            .addNetworkInterceptor(apikey)
             .build()
-
 
     @Singleton
     @Provides
-    fun provideLoggingInterceptor() = HttpLoggingInterceptor()
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
 
+    @Singleton
+    @Provides
+    fun provideApiKeyInterceptor(): Interceptor = Interceptor { chain ->
+        val request = chain.request().newBuilder()
+            .addHeader("X-API-KEY", com.bosha.data.BuildConfig.THE_WEATHER_APIKEY)
+            .build()
+        chain.proceed(request)
+    }
 }

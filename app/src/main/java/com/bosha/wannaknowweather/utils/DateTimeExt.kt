@@ -1,12 +1,8 @@
 package com.bosha.wannaknowweather.utils
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import java.time.format.TextStyle
-import java.util.*
 
 
 internal fun Int.unixSecondsToTime(): String {
@@ -23,5 +19,5 @@ internal fun Int.unixSecondsToDayOfWeek(): String {
 
 internal fun Int.unixSecondsToDate(): String {
     val date = Instant.fromEpochSeconds(this.toLong()).toLocalDateTime(TimeZone.UTC)
-    return "${date.month.ordinal}/${date.dayOfMonth}"
+    return "${date.month.ordinal + 1}/${date.dayOfMonth}"
 }

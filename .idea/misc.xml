@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Project/WannaKnowWeather/app/src/main/res/drawable/ic_location.xml" value="0.2875" />
+        <entry key="..\:/Project/WannaKnowWeather/app/src/main/res/drawable/ic_search.xml" value="0.2875" />
         <entry key="..\:/Project/WannaKnowWeather/app/src/main/res/layout/activity_main.xml" value="0.2671794871794872" />
         <entry key="..\:/Project/WannaKnowWeather/app/src/main/res/layout/current_weather_fragment.xml" value="0.2671794871794872" />
         <entry key="..\:/Project/WannaKnowWeather/app/src/main/res/layout/daily_forecast_fragment.xml" value="0.2713541666666667" />

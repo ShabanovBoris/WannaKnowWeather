@@ -3,11 +3,11 @@ package com.bosha.wannaknowweather.utils.location
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import com.bosha.wannaknowweather.R
 import com.google.android.material.snackbar.Snackbar
 
 val Context.hasLocationPermission: Boolean
@@ -20,13 +20,14 @@ val Context.hasLocationPermission: Boolean
 /**
  * Need to call [clear] after use for avoid memory leaks
  */
-class LocationPermissionManager(
+ class LocationPermissionManager(
     private var activity: ComponentActivity?
 ) {
-
     private var registry: ActivityResultLauncher<String>? = null
 
     private val listeners = mutableSetOf<(Boolean) -> Unit>()
+
+    private var wasShown: Boolean = false
 
     private fun executeListeners(boolean: Boolean) {
         listeners.forEach {
@@ -34,32 +35,35 @@ class LocationPermissionManager(
         }
     }
 
+    private fun getActivity() = requireNotNull(activity)
+
     init {
         if (registry == null)
-            registry = requireNotNull(activity)
+            registry = getActivity()
                 .registerForActivityResult(ActivityResultContracts.RequestPermission()) {
                     executeListeners(it)
+                    if (it) clear()
                 }
     }
 
-    fun addOnPermissionListener(action: (Boolean) -> Unit) {
+    fun addListener(action: (Boolean) -> Unit) {
         listeners.add(action)
     }
 
-    fun deleteOnPermissionListener(action: (Boolean) -> Unit) {
+    /**
+     * if i want to delete some custom listeners
+     */
+    fun deleteListener(action: (Boolean) -> Unit) {
         listeners.remove(action)
     }
 
     fun locationPermission(block: ((granted: Boolean) -> Unit)?) {
+        registry ?: return
         block?.let {
-            val listenerWrapper:(granted: Boolean) -> Unit = {
-                block(it)
-                deleteOnPermissionListener(block)
-            }
-            addOnPermissionListener(listenerWrapper)
+            addListener(it)
         }
 
-        if (requireNotNull(activity).hasLocationPermission) {
+        if (getActivity().hasLocationPermission) {
             executeListeners(true)
             return
         }
@@ -67,19 +71,24 @@ class LocationPermissionManager(
         registry?.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
-    fun locationPermissionWithSnackBar(anchorView: View, onSuccess: Context.() -> Unit) {
+    fun locationPermissionWithSnackBar(showOnce: Boolean = false, onSuccess: Context.() -> Unit) {
+        if (showOnce) {
+            if (wasShown) return
+        }
+        wasShown = true
+
         locationPermission {
             if (it) {
-                activity?.onSuccess()
+                getActivity().onSuccess()
             } else {
                 Snackbar.make(
-                    requireNotNull(activity),
-                    anchorView,
-                    "Permission needs for define your location",
+                    getActivity(),
+                    getActivity().findViewById(android.R.id.content),
+                    "Allow location permission for define your location",
                     Snackbar.LENGTH_INDEFINITE
                 )
                     .setAction("Grant") {
-                        locationPermissionWithSnackBar(anchorView, onSuccess)
+                        locationPermission { activity?.onSuccess() }
                     }.show()
             }
         }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Widget.WKW.TextView" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+
     </style>
 
     <style name="Widget.WKW.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
     </style>
 
     <style name="Widget.WKW.EditTextMaterialLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -19,7 +21,7 @@
         <item name="boxCornerRadiusBottomStart" >@dimen/main_space</item>
         <item name="boxStrokeColor" >@color/edit_text_color</item>
         <item name="hintTextColor" >@color/edit_text_color</item>
-
     </style>
+
 
 </resources>

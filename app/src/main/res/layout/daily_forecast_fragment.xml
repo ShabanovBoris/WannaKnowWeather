@@ -31,7 +31,9 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/daily_forecast_item">
+        tools:listitem="@layout/daily_forecast_item"
+        android:paddingEnd="@dimen/big_space"
+        android:clipToPadding="false">
 
     </androidx.recyclerview.widget.RecyclerView>
 

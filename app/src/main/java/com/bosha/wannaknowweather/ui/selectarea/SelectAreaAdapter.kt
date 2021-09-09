@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bosha.domain.common.WeatherCoordinates
+import com.bosha.wannaknowweather.R
 import com.bosha.wannaknowweather.databinding.SearchItemBinding
-import com.bosha.wannaknowweather.ui.selectarea.SelectAreaViewModel.SearchResult
+import com.bosha.wannaknowweather.ui.selectarea.SelectAreaViewModel.SearchResultUi
 import kotlin.math.roundToInt
 
 class SelectAreaAdapter(private val onClick: (WeatherCoordinates) -> Unit) :
-    ListAdapter<SearchResult, SelectAreaAdapter.SearchCityViewHolder>(
+    ListAdapter<SearchResultUi, SelectAreaAdapter.SearchCityViewHolder>(
         DiffCallback()
     ) {
 
@@ -29,12 +30,11 @@ class SelectAreaAdapter(private val onClick: (WeatherCoordinates) -> Unit) :
         }
     }
 
-
-    //TODO refactor
     override fun onBindViewHolder(holder: SearchCityViewHolder, position: Int) {
         holder.binding.apply {
             tvSearchName.text = getItem(position).locationName
             tvCurrentTemp.text = getItem(position).temp.roundToInt().toString()
+            tvCurrentTemp.append(tvCurrentTemp.context.getString(R.string.celsius))
         }
     }
 
@@ -43,12 +43,12 @@ class SelectAreaAdapter(private val onClick: (WeatherCoordinates) -> Unit) :
 
 }
 
-private class DiffCallback : DiffUtil.ItemCallback<SearchResult>() {
+private class DiffCallback : DiffUtil.ItemCallback<SearchResultUi>() {
 
-    override fun areItemsTheSame(oldItem: SearchResult, newItem: SearchResult): Boolean =
+    override fun areItemsTheSame(oldItem: SearchResultUi, newItem: SearchResultUi): Boolean =
         newItem == oldItem
 
 
-    override fun areContentsTheSame(oldItem: SearchResult, newItem: SearchResult): Boolean =
+    override fun areContentsTheSame(oldItem: SearchResultUi, newItem: SearchResultUi): Boolean =
         newItem.coordinates == oldItem.coordinates
 }

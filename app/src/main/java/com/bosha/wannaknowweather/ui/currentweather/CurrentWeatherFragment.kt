@@ -18,7 +18,6 @@ import com.bosha.wannaknowweather.ui.ViewModelFactory
 import com.bosha.wannaknowweather.utils.injectDeps
 import com.bosha.wannaknowweather.utils.location.LocationPermissionManager
 import com.bosha.wannaknowweather.utils.location.getLastLocation
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -29,8 +28,10 @@ class CurrentWeatherFragment : Fragment() {
     private var _binding: CurrentWeatherFragmentBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    @Inject lateinit var factory: ViewModelFactory
-    @Inject lateinit var locationPermissionManager: LocationPermissionManager
+    @Inject
+    lateinit var factory: ViewModelFactory
+    @Inject
+    lateinit var locationPermissionManager: LocationPermissionManager
 
     private val viewModel by viewModels<CurrentWeatherViewModel> { factory }
 
@@ -46,6 +47,7 @@ class CurrentWeatherFragment : Fragment() {
         _binding = CurrentWeatherFragmentBinding.inflate(inflater, container, false)
         setUpRecycler()
         setUpButtons()
+        firstLocationPermission()
         return binding.root
     }
 
@@ -96,8 +98,8 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    private fun onFirstPermissionQuery() {
-        locationPermissionManager.locationPermissionWithSnackBar(binding.root) {
+    private fun firstLocationPermission() {
+        locationPermissionManager.locationPermissionWithSnackBar(true) {
             getLastLocation(::handleLocation)
         }
     }

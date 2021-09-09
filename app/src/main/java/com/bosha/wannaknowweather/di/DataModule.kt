@@ -4,7 +4,6 @@ import com.bosha.data.repositoriesImpl.WeatherRepositoryImpl
 import com.bosha.domain.repositories.WeatherRepository
 import com.bosha.wannaknowweather.di.scopes.ScreenScope
 import dagger.Binds
-import dagger.BindsInstance
 import dagger.Module
 
 @Module

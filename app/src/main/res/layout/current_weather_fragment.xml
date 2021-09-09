@@ -55,17 +55,16 @@
         app:layout_constraintTop_toBottomOf="@id/tb_current"
         app:layout_constraintVertical_bias="0.20" />
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/tb_current"
         android:layout_width="0dp"
         android:layout_height="?android:actionBarSize"
-        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/tool_bar_menu"
-        app:navigationIcon="@drawable/ic_search">
-
+        app:navigationIcon="@drawable/ic_search"
+        >
         <TextView
             android:id="@+id/tv_current_city"
             android:layout_width="wrap_content"
@@ -73,7 +72,7 @@
             android:layout_gravity="center"
             android:textSize="24sp"
             tools:text="Moscow" />
-    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/pb_loading"

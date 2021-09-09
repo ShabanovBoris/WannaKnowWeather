@@ -7,15 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bosha.data.api.WeatherConstants
 import com.bosha.domain.entities.DailyForecast
-import com.bosha.domain.entities.HourlyForecast
 import com.bosha.wannaknowweather.R
 import com.bosha.wannaknowweather.databinding.DailyForecastItemBinding
-import com.bosha.wannaknowweather.databinding.HourlyForecastItemBinding
 import com.bosha.wannaknowweather.utils.unixSecondsToDate
 import com.bosha.wannaknowweather.utils.unixSecondsToDayOfWeek
-import com.bosha.wannaknowweather.utils.unixSecondsToTime
 import kotlin.math.roundToInt
-
 
 
 class DailyForecastAdapter :

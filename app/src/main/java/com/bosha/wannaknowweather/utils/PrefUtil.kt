@@ -8,6 +8,12 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
+/**
+ * Simple extension that uses for getting last used location
+ * i.e. user did not grant location permission and we don not want
+ * to select location every launch app
+ */
+
 private const val KEY_LOCATION = "key_location"
 
 internal var SharedPreferences.location: WeatherCoordinates?
@@ -29,7 +35,6 @@ internal var SharedPreferences.location: WeatherCoordinates?
         return null
     }
 
-
 internal fun SharedPreferences.listenLocation(): Flow<WeatherCoordinates> {
     return callbackFlow {
 
@@ -43,6 +48,9 @@ internal fun SharedPreferences.listenLocation(): Flow<WeatherCoordinates> {
 
         registerOnSharedPreferenceChangeListener(listener)
 
+        /**
+         * unregister when parent coroutine will finish
+         */
         awaitClose { unregisterOnSharedPreferenceChangeListener(listener) }
     }
 }

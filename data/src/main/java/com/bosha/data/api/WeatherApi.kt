@@ -10,7 +10,7 @@ import retrofit2.http.Query
 
 interface WeatherApi {
 
-    @Headers("X-API-KEY:${BuildConfig.THE_WEATHER_APIKEY}")
+//    @Headers("X-API-KEY:${BuildConfig.THE_WEATHER_APIKEY}")
     @GET("onecall")
     suspend fun currentWeatherByLocation(
         @Query("lat") lat: Double,
@@ -19,7 +19,7 @@ interface WeatherApi {
         @Query("exclude") exclude: String = "hourly,daily,minutely,alerts",
     ): WeatherResponse
 
-    @Headers("X-API-KEY:${BuildConfig.THE_WEATHER_APIKEY}")
+//    @Headers("X-API-KEY:${BuildConfig.THE_WEATHER_APIKEY}")
     @GET("onecall")
     suspend fun hourlyWeatherByLocation(
         @Query("lat") lat: Double,
@@ -28,7 +28,7 @@ interface WeatherApi {
         @Query("exclude") exclude: String = "current,daily,minutely,alerts",
     ): WeatherResponse
 
-    @Headers("X-API-KEY:${BuildConfig.THE_WEATHER_APIKEY}")
+//    @Headers("X-API-KEY:${BuildConfig.THE_WEATHER_APIKEY}")
     @GET("onecall")
     suspend fun dailyWeatherByLocation(
         @Query("lat") lat: Double,

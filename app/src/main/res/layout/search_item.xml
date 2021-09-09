@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/main_space"
     android:backgroundTint="?attr/colorPrimary"
-    app:cardCornerRadius="@dimen/main_space">
+    app:cardCornerRadius="@dimen/main_space"
+    app:cardElevation="@dimen/big_space">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,13 +16,15 @@
 
         <TextView
             android:id="@+id/tv_search_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_current_temp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Moscow" />
+            tools:text="Moscow"
+            android:gravity="start"/>
 
 
         <TextView
@@ -31,7 +34,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="12" />
+            tools:text="12°C" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,20 +26,20 @@ class SelectAreaViewModel(
         )
     }
 
-    private val _selectedResult: MutableStateFlow<List<SearchResult>> =
+    private val _selectedResultUi: MutableStateFlow<List<SearchResultUi>> =
         MutableStateFlow(emptyList())
-    val selectedResult get() = _selectedResult.asStateFlow()
+    val selectedResult get() = _selectedResultUi.asStateFlow()
 
     fun findCity(cityName: String) {
         viewModelScope.launch(handler) {
-            val resultList = mutableListOf<SearchResult>()
+            val resultList = mutableListOf<SearchResultUi>()
 
             weatherGeocoder.getLocationsByName(cityName).forEach {
                 val coords = WeatherCoordinates(it.latitude, it.longitude)
 
                 currentWeatherUseCase(coords).collectSuccess { weather ->
                     resultList.add(
-                        SearchResult(
+                        SearchResultUi(
                             it.getAddressLine(0),
                             coords,
                             weather.temp
@@ -47,8 +47,7 @@ class SelectAreaViewModel(
                     )
                 }
             }
-
-            _selectedResult.value = resultList
+            _selectedResultUi.value = resultList
         }
     }
 
@@ -56,7 +55,7 @@ class SelectAreaViewModel(
         sharedPreferences.location = coordinates
     }
 
-    data class SearchResult(
+    data class SearchResultUi(
         val locationName: String,
         val coordinates: WeatherCoordinates,
         val temp: Double

@@ -6,6 +6,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.util.Log
 import java.io.IOException
+import java.util.*
 
 
 class WeatherGeocoder(
@@ -31,7 +32,7 @@ class WeatherGeocoder(
     fun getAreaName(weatherCoordinates: WeatherCoordinates): List<String> {
         val address = getLocationAddressOrNull(weatherCoordinates)
         return listOf(
-            address?.adminArea ?: "",
+            address?.getAddressLine(0)?.split(",")?.first() ?: "",
             address?.locality ?: "",
         )
     }

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.common.WeatherGeocoder
-import com.bosha.domain.common.getSuccess
 import com.bosha.domain.common.takeSuccessOrElse
 import com.bosha.domain.entities.CurrentWeather
 import com.bosha.domain.entities.HourlyForecast
@@ -59,7 +58,8 @@ class CurrentWeatherViewModel(
         viewModelScope.launch {
             sharedPreferences.listenLocation()
                 .collect {
-                    loadData(it) }
+                    loadData(it)
+                }
         }
     }
 

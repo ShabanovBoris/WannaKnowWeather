@@ -37,11 +37,11 @@ class DailyForecastViewModel(
     }
 
     private fun loadData(coordinates: WeatherCoordinates) = viewModelScope.launch(handler) {
-        useCase(coordinates).collectSuccess {
-            it.forEach {
+        useCase(coordinates).collectSuccess { list ->
+            list.forEach {
                 Log.e("TAG", "loadData: $it", )
             }
-            _forecast.value = it
+            _forecast.value = list
         }
     }
 }

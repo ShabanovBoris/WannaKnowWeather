@@ -8,6 +8,7 @@
     <string name="enter_location">Enter location</string>
     <string name="location">location</string>
     <string name="first_search">Enter the exact name of the location on any language</string>
-    <string name="empty_location">Grand locations permission or choose location</string>
+    <string name="empty_location">Grant the location permission or choose a location</string>
+    <string name="allow_location">"Allow location permission for define your location"</string>
 
 </resources>

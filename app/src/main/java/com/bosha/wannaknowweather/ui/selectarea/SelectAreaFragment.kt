@@ -69,9 +69,9 @@ class SelectAreaFragment : Fragment() {
         }
     }
 
-    private fun handleResult(result: List<SelectAreaViewModel.SearchResult>) {
-        if (result.isEmpty()) return
-        (binding.rvCitySelect.adapter as SelectAreaAdapter).submitList(result)
+    private fun handleResult(resultUi: List<SelectAreaViewModel.SearchResultUi>) {
+        if (resultUi.isEmpty()) return
+        (binding.rvCitySelect.adapter as SelectAreaAdapter).submitList(resultUi)
         binding.tvHint.isVisible = false
     }
 
