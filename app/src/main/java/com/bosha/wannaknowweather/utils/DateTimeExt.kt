@@ -7,10 +7,13 @@ import kotlinx.datetime.toLocalDateTime
 
 internal fun Int.unixSecondsToTime(): String {
     val date = Instant.fromEpochSeconds(this.toLong()).toLocalDateTime(TimeZone.UTC)
-    return if (date.minute == 0) "${date.hour}:00"
-    else "${date.hour}:${date.minute}"
-}
+    return when {
+        (date.minute == 0) -> "${date.hour}:00"
+        (date.minute / 10 == 0) -> "${date.hour}:0${date.minute}"
+        else -> "${date.hour}:${date.minute}"
+    }
 
+}
 
 internal fun Int.unixSecondsToDayOfWeek(): String {
     val date = Instant.fromEpochSeconds(this.toLong()).toLocalDateTime(TimeZone.UTC)

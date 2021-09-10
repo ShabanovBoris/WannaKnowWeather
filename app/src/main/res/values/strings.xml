@@ -10,5 +10,11 @@
     <string name="first_search">Enter the exact name of the location on any language</string>
     <string name="empty_location">Grant the location permission or choose a location</string>
     <string name="allow_location">"Allow location permission for define your location"</string>
+    <string name="today_s_details">Today\'s details</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="humidity">Humidity</string>
+    <string name="feelslike">FeelsLike</string>
+    <string name="pressure">Pressure</string>
 
 </resources>

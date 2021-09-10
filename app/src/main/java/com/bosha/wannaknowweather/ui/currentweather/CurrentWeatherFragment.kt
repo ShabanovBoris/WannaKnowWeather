@@ -12,12 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bosha.domain.common.WeatherCoordinates
+import com.bosha.domain.entities.CurrentWeather
 import com.bosha.wannaknowweather.R
 import com.bosha.wannaknowweather.databinding.CurrentWeatherFragmentBinding
 import com.bosha.wannaknowweather.ui.ViewModelFactory
 import com.bosha.wannaknowweather.utils.injectDeps
 import com.bosha.wannaknowweather.utils.location.LocationPermissionManager
 import com.bosha.wannaknowweather.utils.location.getLastLocation
+import com.bosha.wannaknowweather.utils.unixSecondsToTime
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -108,7 +110,6 @@ class CurrentWeatherFragment : Fragment() {
         weather ?: return
         binding.apply {
             tvTemp.text = weather.currentWeather.temp.roundToInt().toString()
-
             tvName.text = weather.currentWeather.weather[0].main
 
             (rvHourlyForecast.adapter as HourlyForecastAdapter).forecastList =
@@ -118,10 +119,23 @@ class CurrentWeatherFragment : Fragment() {
 
             // in example [locality] is Moscow, [areaName] is Moscow oblast'
             if (weather.locality.isEmpty()) {
-                tvCurrentCity.text = weather.areaName
+                ctbCollapsTb.title = weather.areaName
             } else {
-                tvCurrentCity.text = weather.locality
+                ctbCollapsTb.title = weather.locality
             }
+
+            fillDetails(weather.currentWeather)
+        }
+    }
+
+    private fun fillDetails(weather: CurrentWeather) {
+        binding.details.apply {
+            pressureInfo.text = weather.pressure.toString()
+            tvSunriseInfo.text = weather.sunrise.unixSecondsToTime()
+            tvSunsetInfo.text = weather.sunset.unixSecondsToTime()
+            tvFeelsLikeInfo.text = weather.feelsLike.roundToInt().toString()
+            tvFeelsLikeInfo.append(tvFeelsLikeInfo.context.getString(R.string.celsius_sign))
+            tvHumidityInfo.text = weather.humidity.toString()
         }
     }
 
@@ -130,6 +144,8 @@ class CurrentWeatherFragment : Fragment() {
             CurrentWeatherViewModel.SideEffects.LOADING -> {
                 binding.pbLoading.show()
                 binding.bTo7dayForecast.isVisible = false
+                binding.details.detailsCars.isVisible = false
+
             }
             CurrentWeatherViewModel.SideEffects.ERROR -> {
                 binding.pbLoading.hide()
@@ -139,10 +155,12 @@ class CurrentWeatherFragment : Fragment() {
                 binding.pbLoading.hide()
                 binding.tvHint.isVisible = false
                 binding.bTo7dayForecast.isVisible = true
+                binding.details.detailsCars.isVisible = true
             }
             CurrentWeatherViewModel.SideEffects.EMPTY_LOCATION -> {
                 binding.pbLoading.hide()
                 binding.tvHint.isVisible = true
+
             }
         }
     }
