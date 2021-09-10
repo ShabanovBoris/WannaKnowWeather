@@ -8,7 +8,7 @@ import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.common.WeatherGeocoder
 import com.bosha.domain.common.collectSuccess
 import com.bosha.domain.usecases.CurrentWeatherUseCase
-import com.bosha.wannaknowweather.utils.location
+import com.bosha.wannaknowweather.utils.savedLocation
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class SelectAreaViewModel(
     private val currentWeatherUseCase: CurrentWeatherUseCase,
     private val weatherGeocoder: WeatherGeocoder,
-    private val sharedPreferences: SharedPreferences
+    sharedPreferences: SharedPreferences
 ) : ViewModel() {
     private val handler = CoroutineExceptionHandler { _, throwable ->
         Log.e(
@@ -25,6 +25,8 @@ class SelectAreaViewModel(
             throwable.toString()
         )
     }
+
+    private var savedLocation by sharedPreferences.savedLocation()
 
     private val _selectedResultUi: MutableStateFlow<List<SearchResultUi>> =
         MutableStateFlow(emptyList())
@@ -52,7 +54,7 @@ class SelectAreaViewModel(
     }
 
     fun selectLocation(coordinates: WeatherCoordinates) {
-        sharedPreferences.location = coordinates
+        savedLocation = coordinates
     }
 
     data class SearchResultUi(

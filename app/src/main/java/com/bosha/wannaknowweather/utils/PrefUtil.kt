@@ -3,10 +3,11 @@ package com.bosha.wannaknowweather.utils
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.bosha.domain.common.WeatherCoordinates
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 /**
  * Simple extension that uses for getting last used location
@@ -16,33 +17,39 @@ import kotlinx.coroutines.flow.callbackFlow
 
 private const val KEY_LOCATION = "key_location"
 
-internal var SharedPreferences.location: WeatherCoordinates?
-    set(value) {
+fun SharedPreferences.savedLocation() = SavedLocation(this)
+
+class SavedLocation(private val sharedPreferences: SharedPreferences) :
+    ReadWriteProperty<Any?, WeatherCoordinates?> {
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): WeatherCoordinates? {
+        if (sharedPreferences.contains(KEY_LOCATION).not()) return null
+        (sharedPreferences.getString(KEY_LOCATION, null) ?: "")
+            .also {
+                val list = it.split(":")
+                return WeatherCoordinates(list[0].toDouble(), list[1].toDouble())
+            }
+    }
+
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: WeatherCoordinates?) {
         value ?: return
-        edit {
+        sharedPreferences.edit {
             putString(KEY_LOCATION, "${value.lat}:${value.lon}")
         }
     }
-    get() {
-        if (contains(KEY_LOCATION).not()) return null
-        edit {
-            (getString(KEY_LOCATION, null) ?: "")
-                .also {
-                    val list = it.split(":")
-                    return WeatherCoordinates(list[0].toDouble(), list[1].toDouble())
-                }
-        }
-        return null
-    }
+}
+
 
 internal fun SharedPreferences.listenLocation(): Flow<WeatherCoordinates> {
+    val location by savedLocation()
+
     return callbackFlow {
 
         val listener =
-            SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
                 if (key == KEY_LOCATION) {
-                    if (sharedPreferences.location != null)
-                        trySend(requireNotNull(sharedPreferences.location))
+                    if (location != null)
+                        trySend(requireNotNull(location))
                 }
             }
 

@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import com.bosha.wannaknowweather.R
 import com.google.android.material.snackbar.Snackbar
 
 val Context.hasLocationPermission: Boolean
@@ -20,14 +19,14 @@ val Context.hasLocationPermission: Boolean
 /**
  * Need to call [clear] after use for avoid memory leaks
  */
- class LocationPermissionManager(
+class LocationPermissionManager(
     private var activity: ComponentActivity?
 ) {
     private var registry: ActivityResultLauncher<String>? = null
 
     private val listeners = mutableSetOf<(Boolean) -> Unit>()
 
-    private var wasShown: Boolean = false
+    private var snackbarWasShown: Boolean = false
 
     private fun executeListeners(boolean: Boolean) {
         listeners.forEach {
@@ -72,10 +71,13 @@ val Context.hasLocationPermission: Boolean
     }
 
     fun locationPermissionWithSnackBar(showOnce: Boolean = false, onSuccess: Context.() -> Unit) {
-        if (showOnce) {
-            if (wasShown) return
+        if (getActivity().hasLocationPermission) {
+            return
         }
-        wasShown = true
+        if (showOnce) {
+            if (snackbarWasShown) return
+        }
+        snackbarWasShown = true
 
         locationPermission {
             if (it) {

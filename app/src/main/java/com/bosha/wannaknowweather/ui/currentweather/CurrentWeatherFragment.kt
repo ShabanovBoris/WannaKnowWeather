@@ -166,6 +166,6 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun handleLocation(weatherCoordinates: WeatherCoordinates) {
-        viewModel.lastKnownLocation = weatherCoordinates
+        viewModel.setLocation(weatherCoordinates)
     }
 }

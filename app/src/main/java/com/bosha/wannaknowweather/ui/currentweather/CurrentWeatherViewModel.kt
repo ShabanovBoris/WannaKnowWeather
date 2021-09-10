@@ -12,7 +12,7 @@ import com.bosha.domain.entities.HourlyForecast
 import com.bosha.domain.usecases.CurrentWeatherUseCase
 import com.bosha.domain.usecases.HourlyWeatherForecastUseCase
 import com.bosha.wannaknowweather.utils.listenLocation
-import com.bosha.wannaknowweather.utils.location
+import com.bosha.wannaknowweather.utils.savedLocation
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +24,7 @@ class CurrentWeatherViewModel(
     private val currentWeatherUseCase: CurrentWeatherUseCase,
     private val hourlyWeatherForecastUseCase: HourlyWeatherForecastUseCase,
     private val weatherGeocoder: WeatherGeocoder,
-    private val sharedPreferences: SharedPreferences
+    sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
@@ -34,12 +34,7 @@ class CurrentWeatherViewModel(
         )
     }
 
-    var lastKnownLocation: WeatherCoordinates?
-        set(value) {
-            sharedPreferences.location = value
-            loadData(requireNotNull(value))
-        }
-        get() = sharedPreferences.location
+    private var savedLocation by sharedPreferences.savedLocation()
 
     private val _weather: MutableStateFlow<WeatherUi?> =
         MutableStateFlow(null)
@@ -50,7 +45,7 @@ class CurrentWeatherViewModel(
     val sideEffect get() = _sideEffect.asStateFlow()
 
     init {
-        val location = lastKnownLocation
+        val location = savedLocation
         when (location) {
             null -> _sideEffect.value = SideEffects.EMPTY_LOCATION
             else -> loadData(location)
@@ -91,6 +86,11 @@ class CurrentWeatherViewModel(
                 _weather.value = it
                 _sideEffect.value = SideEffects.LOADED
             }
+    }
+
+    fun setLocation(location: WeatherCoordinates){
+        savedLocation = location
+        loadData(location)
     }
 
     enum class SideEffects {

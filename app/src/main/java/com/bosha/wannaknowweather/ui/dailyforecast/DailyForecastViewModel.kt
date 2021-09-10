@@ -8,7 +8,7 @@ import com.bosha.domain.common.WeatherCoordinates
 import com.bosha.domain.common.collectSuccess
 import com.bosha.domain.entities.DailyForecast
 import com.bosha.domain.usecases.DailyWeatherForecastUseCase
-import com.bosha.wannaknowweather.utils.location
+import com.bosha.wannaknowweather.utils.savedLocation
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,8 +31,10 @@ class DailyForecastViewModel(
         MutableStateFlow(null)
     val forecast get() = _forecast.asStateFlow()
 
+    private val savedLocation by sharedPreferences.savedLocation()
+
     init {
-        val loc = sharedPreferences.location
+        val loc = savedLocation
         if (loc != null) loadData(loc)
     }
 
