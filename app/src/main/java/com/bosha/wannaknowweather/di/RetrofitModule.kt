@@ -1,6 +1,8 @@
 package com.bosha.wannaknowweather.di
 
 import com.bosha.wannaknowweather.BuildConfig
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -12,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 class RetrofitModule {
-
+    
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =

@@ -10,7 +10,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * Simple extension that uses for getting last used location
+ * Simple delegate that uses for getting last used location
  * i.e. user did not grant location permission and we don not want
  * to select location every launch app
  */
