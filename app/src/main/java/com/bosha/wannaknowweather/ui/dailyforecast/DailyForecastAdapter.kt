@@ -36,12 +36,6 @@ class DailyForecastAdapter :
     override fun onBindViewHolder(holder: DailyForecastViewHolder, position: Int) {
         val item = forecastList[position]
         holder.binding.apply {
-//            tvTime.text = forecastList[position].dt.unixSecondsToTime()
-//            tvTemp.text = forecastList[position].temp.roundToInt().toString()
-//            tvTemp.append(tvTemp.context.getString(R.string.celsius_sign))
-//            ivIconWeather.load(WeatherConstants.getImageUrl(forecastList[position].weather[0].icon))
-//            tvWindSpeed.text = forecastList[position].windSpeed.toString()
-//            tvWindSpeed.append(tvTemp.context.getString(R.string.wind_speed_metric))
             tvTempMin.text = item.temp.min.roundToInt().toString()
             tvTempMin.append(tvTempMin.context.getString(R.string.celsius_sign))
             tvTempMax.text = item.temp.max.roundToInt().toString()

@@ -13,9 +13,6 @@ import javax.inject.Inject
 
 class MainScreenActivity : AppCompatActivity(R.layout.activity_main), Screen{
 
-    @Inject
-    lateinit var permissionManager: LocationPermissionManager
-
     override val screenComponent: ScreenComponent by lazy {
         createScreenComponent(
             getPreferences(Context.MODE_PRIVATE),
